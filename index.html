@@ -2,9 +2,119 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Title</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
+	<title>verynice</title>
+	<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            background-size: cover;
+        }
+
+        .audio-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+
+        .audio-icon:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .audio-icon span {
+            color: white;
+            font-size: 20px;
+            line-height: 1;
+        }
+	</style>
 </head>
 <body>
-<h1>hello</h1>
+<!-- Video Background -->
+<video class="video-background" autoplay muted loop playsinline>
+	<source src="kidamnesia.mp4" type="video/mp4">
+	your browser does not support the video tag
+</video>
+
+<!-- Audio Background -->
+<audio id="background-audio" loop>
+	<source src="idioteque.mp3" type="audio/mpeg">
+	your browser does not support the audio element
+</audio>
+
+<!-- Minimalist Audio Icon -->
+<div class="audio-icon" id="audio-toggle">
+	<span>🔊</span>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const audio = document.getElementById('background-audio');
+        const audioToggle = document.getElementById('audio-toggle');
+        const audioIcon = audioToggle.querySelector('span');
+
+        // Set initial volume
+        audio.volume = 0.5;
+
+        // Handle autoplay restrictions
+        let audioAttempted = false;
+
+        // Function to try playing audio
+        function tryPlayAudio() {
+            if (!audioAttempted) {
+                audioAttempted = true;
+                audio.play().then(() => {
+                    audioIcon.textContent = '🔊';
+                }).catch(error => {
+                    console.log('Autoplay prevented:', error);
+                    audioIcon.textContent = '🔇';
+                });
+            }
+        }
+
+        // Try to autoplay on page interaction
+        document.body.addEventListener('click', tryPlayAudio, { once: true });
+        document.body.addEventListener('touchstart', tryPlayAudio, { once: true });
+        document.body.addEventListener('keydown', tryPlayAudio, { once: true });
+
+        // Toggle audio play/pause
+        audioToggle.addEventListener('click', function() {
+            if (audio.paused) {
+                audio.play();
+                audioIcon.textContent = '🔊';
+            } else {
+                audio.pause();
+                audioIcon.textContent = '🔇';
+            }
+        });
+    });
+</script>
 </body>
 </html>
